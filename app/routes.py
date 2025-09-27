@@ -49,7 +49,6 @@ def profile():
 # Submit code (runs Judge0 API)
 # in routes.py
 # routes.py
-
 @main.route('/submit', methods=['POST'])
 @login_required
 def submit():
@@ -60,7 +59,7 @@ def submit():
 
     problem = mongo.db.problems.find_one({"_id": ObjectId(problem_id)})
     if not problem:
-        return jsonify({"status":"Error","stdout":"Problem not found"})
+        return jsonify({"status":"Error","error":"Problem not found"})
 
     # Single test case
     test_case = problem.get("test_case", {})
@@ -68,21 +67,22 @@ def submit():
     expected_output = str(test_case.get("output","")).strip()
 
     try:
-        # call Judge0 synchronously
-        result = run_code(code, lang_id, input_data)
+        result = run_code(code, lang_id, input_data)  # call Judge0
         stdout = str(result.get("stdout","")).strip()
         stderr = str(result.get("stderr","")).strip()
-        status_judge = result.get("status",{}).get("description","Unknown")
 
-        # compare output
-        test_case_status = "Success" if stdout == expected_output else "Failed"
+        # Decide status
+        if stdout == expected_output:
+            status = "Accepted"
+        else:
+            status = "Rejected"
 
     except Exception as e:
         stdout = ""
         stderr = str(e)
-        test_case_status = "Error"
+        status = "Error"
 
-    # save submission
+    # Save submission
     mongo.db.submissions.insert_one({
         "user_id": current_user.id,
         "problem_id": problem_id,
@@ -92,16 +92,15 @@ def submit():
         "code": code,
         "submitted_at": datetime.utcnow(),
         "test_case_result": {
-            "status": test_case_status,
+            "status": status,
             "stdout": stdout,
             "stderr": stderr
         }
     })
 
     return jsonify({
-        "status": test_case_status,
+        "status": status,
         "stdout": stdout,
-        "stderr": stderr
+        "expected": expected_output,
+        "error": stderr
     })
-
-  

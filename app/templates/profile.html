@@ -27,9 +27,9 @@
           <td>{{ sub.submitted_at }}</td>
           <td>
             {% if sub.test_case_result %}
-              {% if sub.test_case_result.status == "Success" %}
+              {% if sub.test_case_result.status == "Accepted" %}
                 <span class="status accepted">Accepted</span>
-              {% elif sub.test_case_result.status == "Failed" %}
+              {% elif sub.test_case_result.status == "Rejected" %}
                 <span class="status rejected">Rejected</span>
               {% else %}
                 <span class="status pending">{{ sub.test_case_result.status }}</span>

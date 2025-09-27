@@ -1,31 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
-<div style="display:flex; gap:20px;">
+<div class="problem-page">
 
   <!-- LEFT PANEL: problem description -->
-  <div style="flex:1; max-width:50%;">
-    <h2>{{ problem.title }}</h2>
-    <p class="difficulty">{{ problem.get('difficulty', '') }}</p>
+  <div class="problem-panel">
+    <h2 class="problem-title">{{ problem.title }}</h2>
+    <p class="problem-difficulty">{{ problem.get('difficulty', '') }}</p>
 
-    <section class="problem-statement">
+    <section class="problem-section">
       <h3>Description</h3>
-      <div>{{ problem.description | safe }}</div>
+      <div class="problem-description">{{ problem.description | safe }}</div>
+    </section>
 
+    <section class="problem-section">
       <h4>Constraints</h4>
-      <div>{{ problem.get('constraints', '') }}</div>
+      <div class="problem-constraints">{{ problem.get('constraints', '') }}</div>
+    </section>
 
+    <section class="problem-section">
       <h4>Sample Input</h4>
-      <pre>{{ problem.test_case.input }}</pre>
+      <pre class="problem-sample">{{ problem.test_case.input }}</pre>
+    </section>
 
+    <section class="problem-section">
       <h4>Sample Output</h4>
-      <pre>{{ problem.test_case.output }}</pre>
+      <pre class="problem-sample">{{ problem.test_case.output }}</pre>
     </section>
   </div>
 
   <!-- RIGHT PANEL: code editor -->
-  <div style="flex:1; max-width:50%;">
-    <label for="lang">Language</label>
-    <select id="lang">
+  <div class="editor-panel">
+    <label for="lang" class="editor-label">Language</label>
+    <select id="lang" class="editor-lang">
       <option value="54" selected>C++ (g++)</option>
       <option value="71">Python 3</option>
       <option value="62">Java</option>
@@ -41,7 +47,7 @@
     </div>
 
     <h4>Test Case Result</h4>
-    <pre id="output">(no output yet)</pre>
+    <pre id="output" class="test-result">(no output yet)</pre>
   </div>
 </div>
 

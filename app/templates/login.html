@@ -1,26 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Login</h2>
+<div class="login-container">
+  <h2 class="login-title">Login</h2>
 
-<form method="POST" action="{{ url_for('auth.login') }}">
-  <label>Username</label>
-  <input type="text" name="username" required>
+  <form method="POST" action="{{ url_for('auth.login') }}" class="login-form">
+    <div class="login-field">
+      <label for="username" class="login-label">Username</label>
+      <input type="text" id="username" name="username" class="login-input" required>
+    </div>
 
-  <label>Password</label>
-  <input type="password" name="password" required>
+    <div class="login-field">
+      <label for="password" class="login-label">Password</label>
+      <input type="password" id="password" name="password" class="login-input" required>
+    </div>
 
-  <button type="submit">Login</button>
-</form>
+    <button type="submit" class="login-button">Login</button>
+  </form>
 
-<p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a></p>
+  <p class="login-register">
+    Don't have an account? 
+    <a href="{{ url_for('auth.register') }}" class="login-link">Register here</a>
+  </p>
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class="flash">
-      {% for msg in messages %}
-        <li>{{ msg }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class="login-flash">
+        {% for msg in messages %}
+          <li class="login-flash-item">{{ msg }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+</div>
 {% endblock %}

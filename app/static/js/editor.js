@@ -1,10 +1,10 @@
 const langModes = {
-  '54': 'text/x-c++src',
-  '71': 'python',
-  '62': 'text/x-java',
-  '50': 'text/x-csrc',
-  '51': 'text/x-csharp',
-  '46': 'shell'
+  '54': 'text/x-c++src',   // C++
+  '71': 'python',          // Python
+  '62': 'text/x-java',     // Java
+  '50': 'text/x-csrc',     // C
+  '51': 'text/x-csharp',   // C#
+  '46': 'shell'            // Bash
 };
 
 const langSelect = document.getElementById('lang');
@@ -22,17 +22,25 @@ let editor = CodeMirror.fromTextArea(textarea, {
   extraKeys: { "Ctrl-Enter": () => runCode() }
 });
 
-// load starter code
+// load starter code for selected language
 function loadStarterFor(langId) {
   editor.setValue(STARTER_MAP[langId] || '');
 }
 loadStarterFor(langSelect.value);
 
+// language switch handler
 langSelect.addEventListener('change', e => {
-  editor.setOption('mode', langModes[e.target.value] || 'text/x-c++src');
+  const newLang = e.target.value;
+  editor.setOption('mode', langModes[newLang] || 'text/x-c++src');
+
   const current = editor.getValue().trim();
   const prevStarter = STARTER_MAP[langSelect.value] || '';
-  if (!current || current === prevStarter) loadStarterFor(e.target.value);
+  const newStarter = STARTER_MAP[newLang] || '';
+
+  // only replace code if it's still default / empty
+  if (!current || current === prevStarter) {
+    loadStarterFor(newLang);
+  }
 });
 
 // run code
@@ -44,25 +52,50 @@ async function runCode() {
   };
 
   stdoutEl.textContent = '⚙️ Running...\n';
+  stdoutEl.classList.remove("accepted", "rejected");
 
   try {
     const res = await fetch('/submit', {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
     const data = await res.json();
 
-    let line = `Test Case Status: ${data.status}\n`;
-    if (data.stdout) line += `Output:\n${data.stdout}\n`;
-    //if (data.stderr) line += `Error:\n${data.stderr}\n`;
+    stdoutEl.textContent = ""; // clear previous
 
-    stdoutEl.textContent = line;
+    switch (data.status) {
+      case "Accepted":
+        stdoutEl.textContent = "✅ Accepted";
+        stdoutEl.classList.add("accepted");
+        break;
 
-  } catch(err) {
-    stdoutEl.textContent = 'Error: ' + err.message;
+      case "Rejected":
+        let rejMsg = "❌ Rejected\n";
+        if (data.stdout) rejMsg += `Your Output:\n${data.stdout}\n`;
+        if (data.expected) rejMsg += `Expected Output:\n${data.expected}\n`;
+        stdoutEl.textContent = rejMsg;
+        stdoutEl.classList.add("rejected");
+        break;
+
+      case "Error":
+        let errMsg = "⚠️ Error\n";
+        if (data.error) errMsg += `${data.error}\n`;
+        if (data.stderr) errMsg += `${data.stderr}\n`;
+        stdoutEl.textContent = errMsg;
+        stdoutEl.classList.add("rejected");
+        break;
+
+      default:
+        stdoutEl.textContent = "⚠️ Unknown response from server.";
+        stdoutEl.classList.add("rejected");
+        break;
+    }
+
+  } catch (err) {
+    stdoutEl.textContent = '⚠️ Request Failed: ' + err.message;
+    stdoutEl.classList.add("rejected");
   }
 }
 
 document.getElementById('run').addEventListener('click', runCode);
-window.addEventListener('keydown', e => { if(e.ctrlKey && e.key === 'Enter') runCode(); });
