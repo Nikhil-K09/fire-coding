@@ -1,10 +1,11 @@
+// editor.js
 const langModes = {
-  '54': 'text/x-c++src',  // C++
-  '71': 'python',         // Python 3
-  '62': 'text/x-java',    // Java
-  '50': 'text/x-csrc',    // C
-  '51': 'text/x-csharp',  // C#
-  '46': 'shell'           // Bash
+  '54': 'text/x-c++src',
+  '71': 'python',
+  '62': 'text/x-java',
+  '50': 'text/x-csrc',
+  '51': 'text/x-csharp',
+  '46': 'shell'
 };
 
 const langSelect = document.getElementById('lang');
@@ -12,7 +13,6 @@ const stdoutEl = document.getElementById('output');
 const stdinEl = document.getElementById('stdin');
 const expectedEl = document.getElementById('expected_output');
 
-// init CodeMirror
 const textarea = document.getElementById('editor');
 let editor = CodeMirror.fromTextArea(textarea, {
   lineNumbers: true,
@@ -20,14 +20,12 @@ let editor = CodeMirror.fromTextArea(textarea, {
   theme: 'material',
   indentUnit: 4,
   tabSize: 4,
-  matchBrackets: true,       // highlight matching brackets
-  autoCloseBrackets: true,    // auto-close (), {}, [], ""
-  extraKeys: {
-    "Ctrl-Enter": () => runCode()
-  }
+  matchBrackets: true,
+  autoCloseBrackets: true,
+  extraKeys: { "Ctrl-Enter": () => runCode() }
 });
 
-// load starter code depending on language
+// Load starter code
 function loadStarterFor(langId) {
   if (STARTER_MAP && STARTER_MAP[langId]) {
     editor.setValue(STARTER_MAP[langId]);
@@ -35,23 +33,16 @@ function loadStarterFor(langId) {
     editor.setValue('');
   }
 }
-
-// initial load
 loadStarterFor(langSelect.value);
 
 langSelect.addEventListener('change', (e) => {
-  const mode = langModes[e.target.value] || 'text/x-c++src';
-  editor.setOption('mode', mode);
-
-  // only auto-load starter if editor is empty or equals previous starter
-  const currentValue = editor.getValue().trim();
+  editor.setOption('mode', langModes[e.target.value] || 'text/x-c++src');
+  const current = editor.getValue().trim();
   const prevStarter = STARTER_MAP[langSelect.value] || '';
-  if (!currentValue || currentValue === prevStarter) {
-    loadStarterFor(e.target.value);
-  }
+  if (!current || current === prevStarter) loadStarterFor(e.target.value);
 });
 
-// run / submit
+// Run / Submit code
 async function runCode() {
   const payload = {
     code: editor.getValue(),
@@ -61,7 +52,8 @@ async function runCode() {
     problem_id: PROBLEM_ID
   };
 
-  stdoutEl.textContent = '⚙️ Submitting...';
+  stdoutEl.textContent = '⚙️ Running...';
+
   try {
     const res = await fetch('/submit', {
       method: 'POST',
@@ -70,25 +62,13 @@ async function runCode() {
     });
     const data = await res.json();
 
-    // display result: prefer stdout, then compile_output, then stderr
-    let out = '';
-    const status = (data.status && data.status.description) ? data.status.description : '';
-
-    if (data.compile_output) out += `Compile output:\n${data.compile_output}\n\n`;
-    if (data.stdout) out += `Stdout:\n${data.stdout}\n\n`;
-    if (data.stderr) out += `Stderr:\n${data.stderr}\n\n`;
-    if (!out) out = JSON.stringify(data, null, 2);
-
-    stdoutEl.textContent = `Status: ${status}\n\n` + out;
+    let outputText = `Status: ${data.status || 'Unknown'}\n\n`;
+    if (data.output) outputText += data.output;
+    stdoutEl.textContent = outputText || 'No output';
   } catch (err) {
     stdoutEl.textContent = 'Error: ' + err.message;
   }
 }
 
-// run on button
 document.getElementById('run').addEventListener('click', runCode);
-
-// Ctrl+Enter to run
-window.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.key === 'Enter') runCode();
-});
+window.addEventListener('keydown', (e) => { if (e.ctrlKey && e.key === 'Enter') runCode(); });

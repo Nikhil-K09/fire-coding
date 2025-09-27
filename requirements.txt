@@ -3,3 +3,5 @@ Flask-PyMongo>=2.3
 python-dotenv>=1.0
 requests>=2.28
 dnspython>=2.0
+flask-login 
+flask-bcrypt
