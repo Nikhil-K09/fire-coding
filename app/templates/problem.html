@@ -1,74 +1,62 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h2>{{ problem.title }}</h2>
-  <p class="difficulty">{{ problem.get('difficulty', '') }}</p>
+<div style="display:flex; gap:20px;">
 
-  <section class="problem-statement">
-    <h3>Description</h3>
-    <div>{{ problem.description | safe }}</div>
+  <!-- LEFT PANEL: problem description -->
+  <div style="flex:1; max-width:50%;">
+    <h2>{{ problem.title }}</h2>
+    <p class="difficulty">{{ problem.get('difficulty', '') }}</p>
 
-    <h4>Constraints</h4>
-    <div>{{ problem.get('constraints', '') }}</div>
+    <section class="problem-statement">
+      <h3>Description</h3>
+      <div>{{ problem.description | safe }}</div>
 
-    {% if problem.sample_input %}
+      <h4>Constraints</h4>
+      <div>{{ problem.get('constraints', '') }}</div>
+
       <h4>Sample Input</h4>
-      <pre>{{ problem.sample_input }}</pre>
-    {% endif %}
+      <pre>{{ problem.test_case.input }}</pre>
 
-    {% if problem.sample_output %}
       <h4>Sample Output</h4>
-      <pre>{{ problem.sample_output }}</pre>
-    {% endif %}
-  </section>
+      <pre>{{ problem.test_case.output }}</pre>
+    </section>
+  </div>
 
-  <section class="editor-area">
-    <div class="left">
-      <label for="lang">Language</label>
-      <select id="lang">
-        <!-- Judge0 language IDs -->
-        <option value="54" selected>C++ (g++)</option>
-        <option value="71">Python 3</option>
-        <option value="62">Java</option>
-        <option value="50">C</option>
-        <option value="51">C#</option>
-        <option value="46">Bash</option>
-      </select>
+  <!-- RIGHT PANEL: code editor -->
+  <div style="flex:1; max-width:50%;">
+    <label for="lang">Language</label>
+    <select id="lang">
+      <option value="54" selected>C++ (g++)</option>
+      <option value="71">Python 3</option>
+      <option value="62">Java</option>
+      <option value="50">C</option>
+      <option value="51">C#</option>
+      <option value="46">Bash</option>
+    </select>
 
-      <!-- Initial code will be replaced by JS with STARTER_MAP -->
-      <textarea id="editor"></textarea>
+    <textarea id="editor"></textarea>
 
-      <h4>Input</h4>
-      <textarea id="stdin" placeholder="Optional standard input"></textarea>
-
-      <h4>Expected Output (optional)</h4>
-      <textarea id="expected_output" placeholder="Optional - used for quick compare"></textarea>
-
-      <div class="buttons">
-        <button id="run">▶ Run (Ctrl+Enter)</button>
-      </div>
+    <div class="buttons">
+      <button id="run">▶ Run Code</button>
     </div>
 
-    <div class="right">
-      <h4>Output</h4>
-      <pre id="output">(no output yet)</pre>
-    </div>
-  </section>
+    <h4>Test Case Result</h4>
+    <pre id="output">(no output yet)</pre>
+  </div>
+</div>
 
-  <!-- CodeMirror from CDN -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/material.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+<!-- CodeMirror CSS/JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/material.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
 
-  <script>
-    // Starter code map injected from backend
-    const STARTER_MAP = {{ problem.get("starter_code", {}) | tojson | safe }};
-    const PROBLEM_ID = "{{ problem['_id'] }}";
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
-  <script src="/static/js/editor.js"></script>
-  
-
+<script>
+const STARTER_MAP = {{ problem.get("starter_code", {}) | tojson | safe }};
+const PROBLEM_ID = "{{ problem['_id'] }}";
+</script>
+<script src="/static/js/editor.js"></script>
 {% endblock %}
