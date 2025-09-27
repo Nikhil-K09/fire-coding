@@ -1,0 +1,21 @@
+[
+  {
+    "slug": "sum-two-integers",
+    "title": "Sum of Two Integers",
+    "difficulty": "Easy",
+    "description": "Given two integers `a` and `b`, print their sum.\n\nInput: two integers separated by space or newline.\nOutput: single integer equal to a + b.",
+    "constraints": "-2^31 <= a, b <= 2^31-1",
+    "sample_input": "3 4\n",
+    "sample_output": "7\n",
+    "starter_code": {
+      "54": "#include <bits/stdc++.h>\nusing namespace std;\nint main() { long long a, b; if (!(cin >> a >> b)) return 0; cout << (a + b) << '\\n'; return 0; }\n",
+      "71": "# Python 3 starter\nimport sys\ndata = sys.stdin.read().strip().split()\nif not data:\n    sys.exit(0)\na, b = map(int, data[:2])\nprint(a + b)\n"
+    },
+    "testcases": [
+      { "input": "3 4\n", "output": "7\n", "hidden": false },
+      { "input": "1 2\n", "output": "3\n", "hidden": true },
+      { "input": "-5 5\n", "output": "0\n", "hidden": true },
+      { "input": "1000000 2\n", "output": "1000002\n", "hidden": true }
+    ]
+  }
+]

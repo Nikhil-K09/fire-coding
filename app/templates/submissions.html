@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Recent Submissions</h1>
+  <table class="sub-table">
+    <thead>
+      <tr><th>ID</th><th>Problem</th><th>Lang</th><th>Status</th><th>Time</th></tr>
+    </thead>
+    <tbody>
+      {% for s in submissions %}
+        <tr>
+          <td>{{ s['_id'] }}</td>
+          <td>{{ s.get('problem_id','-') }}</td>
+          <td>{{ s.get('lang') }}</td>
+          <td>{{ s.get('result', {}).get('status', {}).get('description', '') }}</td>
+          <td>{{ s.get('created_at') }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

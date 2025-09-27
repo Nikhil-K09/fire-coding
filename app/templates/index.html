@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Problems</h1>
+  <ul class="problems-list">
+    {% for p in problems %}
+      <li>
+        <a href="/problem/{{ p['_id'] }}">{{ p.title }}</a>
+        <span class="difficulty">{{ p.get('difficulty', '—') }}</span>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
