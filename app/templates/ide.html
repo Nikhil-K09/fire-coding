@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="ide-container" style="max-width: 1000px; margin: 20px auto;">
+  <div class="editor-panel">
+    <label for="lang" class="editor-label">Language</label>
+    <select id="lang" class="editor-lang">
+        <option value="54" selected>C++ (g++)</option>
+        <option value="71">Python 3</option>
+        <option value="62">Java</option>
+        <option value="50">C</option>
+        <option value="51">C#</option>
+        <option value="46">Bash</option>
+    </select>
+
+    <textarea id="editor">// Write your code here</textarea>
+
+    <!-- Input for Judge0 -->
+    <label for="input" class="editor-label">Input</label>
+    <textarea id="input" class="editor-input" placeholder="Enter custom input here"></textarea>
+
+    <div class="buttons">
+        <button id="run">▶ Run Code</button>
+    </div>
+
+    <h4>Output</h4>
+    <pre id="output" class="test-result">Click Run</pre>
+    </div>
+
+</div>
+
+<!-- CodeMirror -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/material.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
+
+<script>
+const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+  lineNumbers: true,
+  theme: "material",
+  matchBrackets: true,
+  autoCloseBrackets: true,
+  mode: "text/x-c++src"
+});
+
+const langMap = {
+  "54": "text/x-c++src",
+  "71": "python",
+  "62": "text/x-java",
+  "50": "text/x-csrc",
+  "51": "text/x-csharp",
+  "46": "text/x-sh"
+};
+
+document.getElementById("lang").addEventListener("change", function() {
+  const lang = this.value;
+  editor.setOption("mode", langMap[lang] || "text/x-c++src");
+});
+
+document.getElementById("run").addEventListener("click", async () => {
+  const code = editor.getValue();
+  const lang_id = document.getElementById("lang").value;
+  const input = document.getElementById("input").value;
+
+  const response = await fetch("/ide_submit", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ code, lang_id, input })
+  });
+
+  const result = await response.json();
+  document.getElementById("output").textContent = 
+    `Status: ${result.status}\nOutput:\n${result.stdout}\nErrors:\n${result.stderr}`;
+});
+
+</script>
+
+{% endblock %}

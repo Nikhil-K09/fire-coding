@@ -46,7 +46,6 @@ def my_profile():
     return redirect(url_for('main.user_profile', username=current_user.username))
 
 
-
 @main.route('/profile/<username>')
 @login_required
 def user_profile(username):
@@ -62,7 +61,7 @@ def user_profile(username):
         s['submitted_at'] = s['submitted_at'].strftime("%Y-%m-%d %H:%M:%S")
 
     solved_dates = profile.get("solved_dates", [])
-    solved_count = profile.get("solved_count", 0)
+    solved_count = len(solved_dates)
 
     return render_template(
         "profile.html",
@@ -71,7 +70,6 @@ def user_profile(username):
         solved_dates=solved_dates,
         submissions=subs
     )
-
 
 # ================== SUBMIT CODE ==================
 @main.route('/submit', methods=['POST'])
@@ -102,7 +100,7 @@ def submit():
         stderr = str(e)
         status = "Error"
 
-    # Local timestamp (Asia/Kolkata)
+    # Local timestamp
     local_tz = pytz.timezone("Asia/Kolkata")
     local_time = datetime.now(local_tz)
 
@@ -113,7 +111,7 @@ def submit():
         "problem_id": problem_id,
         "problem_title": problem['title'],
         "lang": lang_id,
-        "lang_name": {54: "C++", 71: "Python 3", 62: "Java"}.get(lang_id, "Unknown"),
+        "lang_name": {54:"C++", 71:"Python 3", 62:"Java"}.get(lang_id,"Unknown"),
         "code": code,
         "submitted_at": local_time,
         "test_case_result": {
@@ -144,7 +142,6 @@ def submit():
             # Update profile collection
             profile = mongo.db.profiles.find_one({"user_id": current_user.id})
             if not profile:
-                # Create new profile
                 mongo.db.profiles.insert_one({
                     "user_id": current_user.id,
                     "username": current_user.username,
@@ -152,7 +149,6 @@ def submit():
                     "solved_dates": [local_time.date().isoformat()]
                 })
             else:
-                # Update existing profile
                 mongo.db.profiles.update_one(
                     {"user_id": current_user.id},
                     {
@@ -167,4 +163,33 @@ def submit():
         "expected": expected_output,
         "error": stderr,
         "submitted_at": local_time.strftime("%Y-%m-%d %H:%M:%S %Z")
+    })
+
+@main.route('/ide')
+@login_required
+def ide():
+    return render_template('ide.html')
+
+@main.route('/ide_submit', methods=['POST'])
+@login_required
+def ide_submit():
+    data = request.get_json()
+    code = data.get("code")
+    lang_id = int(data.get("lang_id"))
+    input_data = data.get("input", "")
+
+    try:
+        result = run_code(code, lang_id, input_data)
+        stdout = str(result.get("stdout", "") or "")
+        stderr = str(result.get("stderr", "") or "")
+        status = "Accepted" if stdout else "Error"
+    except Exception as e:
+        stdout = ""
+        stderr = str(e)
+        status = "Error"
+
+    return jsonify({
+        "status": status,
+        "stdout": stdout,
+        "stderr": stderr
     })

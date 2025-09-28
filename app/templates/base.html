@@ -15,17 +15,22 @@
           <img src="{{ url_for('static', filename='images/firecoding-logo.png') }}" alt="FireCoding Logo" class="logo-img">
         </a>
       </div>
-      <nav>
 
+      <nav>
         {% if current_user.is_authenticated %}
+          <div class="user-dropdown">
+            <a href="{{ url_for('main.ide') }}" class="username">IDE</a>
+          </div>
           <div class="user-dropdown">
             <a href="{{ url_for('main.my_profile') }}" class="username">{{ current_user.username }}</a>
           </div>
+          
         {% else %}
-          <a href="{{ url_for('auth.login') }}">Login</a>
+          <a href="{{ url_for('auth.login') }}" class="login-btn">Login</a>
         {% endif %}
       </nav>
     </div>
+
   </header>
 
   <main>

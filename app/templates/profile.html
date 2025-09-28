@@ -49,20 +49,17 @@
 </div>
 
 <!-- Heatmap Script -->
-<!-- Fixed 7x54 Heatmap -->
-
-
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script>
   const solvedDates = new Set({{ solved_dates|tojson }});
 
   const rows = 7;      // days in a week
   const cols = 54;     // fixed weeks
-  const cellSize = 18; // slightly larger cells
+  const cellSize = 18;
   const cellPadding = 4;
 
-  const svgWidth = cols * (cellSize + cellPadding) + 50; // extra space for month labels
-  const svgHeight = rows * (cellSize + cellPadding) + 25; // extra for top labels
+  const svgWidth = cols * (cellSize + cellPadding) + 50;
+  const svgHeight = rows * (cellSize + cellPadding) + 25;
 
   const svg = d3.select("#heatmap")
     .append("svg")
@@ -95,8 +92,8 @@
     .append("rect")
     .attr("width", cellSize)
     .attr("height", cellSize)
-    .attr("x", (d,i) => Math.floor(i/rows) * (cellSize + cellPadding) + 40) // shift right for month labels
-    .attr("y", d => d.getDay() * (cellSize + cellPadding) + 20) // shift down for month labels
+    .attr("x", (d,i) => Math.floor(i/rows) * (cellSize + cellPadding) + 40)
+    .attr("y", d => d.getDay() * (cellSize + cellPadding) + 20)
     .attr("fill", d => solvedDates.has(formatDateLocal(d)) ? "#FF7A00" : "#e0e0e0")
     .attr("rx", 4)
     .attr("ry", 4);
@@ -117,7 +114,7 @@
     .style("fill", "#555")
     .style("font-weight", "600");
 
-  // Day labels (optional, Mon, Wed, Fri)
+  // Day labels (optional)
   const dayLabels = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
   svg.selectAll(".dayLabel")
     .data(dayLabels)
