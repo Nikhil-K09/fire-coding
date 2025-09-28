@@ -27,15 +27,16 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 3%;
-  padding-right: 3%;
+  padding-left: 1%;
+  padding-right: 1%;
+  height: 40px;
 }
 
 /* Logo */
 .logo a {
   font-size: 48px;
   font-weight: 900;
-  color: #1bebf2;
+  color: #FF7A00;
   text-decoration: none;
 }
 
@@ -47,17 +48,23 @@ nav .username {
 }
 
 nav a {
-  margin-left: 24px;
+  padding: 6px 12px;
   font-weight: 600;
   font-size: 30px;
   color: #ffffff;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, border-color 0.2s ease;
+
+  border: 2px solid #313131;   /* Fire orange border */
+  border-radius: 6px;          /* Rounded corners */
 }
 
+
 nav a:hover {
-  color: #1bebf2;
+  color: #FF7A00;              /* Change text to fire orange */
+  border-color: #e8e8e8;       /* Darker orange/red on hover */
 }
+
 
 /* User Dropdown */
 .user-dropdown {
@@ -65,39 +72,12 @@ nav a:hover {
   display: inline-block;
   font-weight: 600;
   font-size: 10px;
+  background-color: #2c2c2c;
   color: #fff;
   cursor: pointer;
 }
 
-/* Dropdown content */
-.user-dropdown .dropdown-content {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 15px;
-  background-color: #2c2c2c;
-  width: max-content;
-  box-shadow: 0px 4px 8px rgba(0,0,0,0.3);
-  z-index: 10;
-  border-radius: 6px;
-  overflow: hidden;
-  text-align: center;
-  user-select: none;
-}
 
-.user-dropdown .dropdown-content a {
-  color: #fff;
-  padding: 10px 18px;
-  text-decoration: none;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.user-dropdown:hover .dropdown-content {
-  display: inline-flex;
-}
 
 /* ================== CONTAINERS ================== */
 .container {
@@ -426,7 +406,7 @@ nav a:hover {
 }
 
 .buttons button {
-  background: #1bebf2;
+  background: #FF4500;
   border: none;
   padding: 8px 14px;
   font-weight: 600;
@@ -436,7 +416,7 @@ nav a:hover {
 }
 
 .buttons button:hover {
-  background: #0db6bd;
+  background: #f77d50;
 }
 
 /* Result status */
@@ -472,6 +452,12 @@ nav a:hover {
   margin-bottom: 1.5rem;
   color: #333;
 }
+.logo-img {
+  height: 50px;   /* adjust as needed */
+  width: auto;    /* keeps aspect ratio */
+  display: block;
+}
+
 
 /* Form */
 .login-form {
@@ -507,7 +493,7 @@ nav a:hover {
 
 
 .login-input:focus {
-  border-color: #1bebf2;
+  border-color: #FF7A00;
   outline: none;
   box-shadow: 0 0 5px rgba(27, 235, 242, 0.4);
 }
@@ -515,7 +501,7 @@ nav a:hover {
 /* Button */
 .login-button {
   width: 100%;   /* ✅ Make it match input width */
-  background: #1bebf2;
+  background: #FF7A00;
   color: #fff;
   border: none;
   padding: 0.8rem;
@@ -528,7 +514,7 @@ nav a:hover {
 
 
 .login-button:hover {
-  background: #17c9d1;
+  background: #fa622b;
 }
 
 /* Register link */
@@ -539,7 +525,7 @@ nav a:hover {
 }
 
 .login-link {
-  color: #1bebf2;
+  color: #FF7A00;
   text-decoration: none;
   font-weight: bold;
 }
@@ -557,7 +543,7 @@ nav a:hover {
 
 .login-flash-item {
   background: #ffecec;
-  color: #d8000c;
+  color: #fa622b;
   padding: 0.6rem;
   border-radius: 6px;
   margin-bottom: 0.5rem;

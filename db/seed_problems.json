@@ -1,21 +1,255 @@
 [
   {
-    "slug": "sum-two-integers",
-    "title": "Sum of Two Integers",
-    "difficulty": "Easy",
-    "description": "Given two integers `a` and `b`, print their sum.\n\nInput: two integers separated by space or newline.\nOutput: single integer equal to a + b.",
-    "constraints": "-2^31 <= a, b <= 2^31-1",
-    "sample_input": "3 4\n",
-    "sample_output": "7\n",
-    "starter_code": {
-      "54": "#include <bits/stdc++.h>\nusing namespace std;\nint main() { long long a, b; if (!(cin >> a >> b)) return 0; cout << (a + b) << '\\n'; return 0; }\n",
-      "71": "# Python 3 starter\nimport sys\ndata = sys.stdin.read().strip().split()\nif not data:\n    sys.exit(0)\na, b = map(int, data[:2])\nprint(a + b)\n"
-    },
-    "testcases": [
-      { "input": "3 4\n", "output": "7\n", "hidden": false },
-      { "input": "1 2\n", "output": "3\n", "hidden": true },
-      { "input": "-5 5\n", "output": "0\n", "hidden": true },
-      { "input": "1000000 2\n", "output": "1000002\n", "hidden": true }
-    ]
+    "slug": "greatest-common-divisor",
+    "title": "Greatest Common Divisor",
+    "difficulty": "🔥",
+    "description": "Given two positive integers `a` and `b`, compute their Greatest Common Divisor (GCD).\n\nInput: two integers separated by space or newline.\nOutput: single integer equal to gcd(a, b).",
+    "constraints": "1 <= a, b <= 10^9",
+    "sample_input": "12 18\n",
+    "sample_output": "6\n",
+    "test_case": {
+      "input": "100 85\n",
+      "output": "5\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "primes-up-to-n",
+    "title": "Primes up to N",
+    "difficulty": "🔥",
+    "description": "Given an integer `n`, print all prime numbers less than or equal to `n` in ascending order.\n\nInput: a single integer `n`.\nOutput: all prime numbers up to `n`, separated by spaces. If no primes exist, output an empty line.",
+    "constraints": "1 <= n <= 10^6",
+    "sample_input": "10\n",
+    "sample_output": "2 3 5 7\n",
+    "test_case": {
+      "input": "1\n",
+      "output": "\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "strobogrammatic-number",
+    "title": "Strobogrammatic Number",
+    "difficulty": "🔥",
+    "description": "A strobogrammatic number is a number that looks the same when rotated 180 degrees (turned upside down). The digits 0, 1, 6, 8, and 9 are considered valid for rotation: 0 → 0, 1 → 1, 6 → 9, 8 → 8, 9 → 6. Given a string representing a number `num`, determine if it is strobogrammatic.\n\nInput: A string `num` containing digits 0-9.\nOutput: Print 'true' if the number is strobogrammatic, otherwise print 'false'.\n\nExample: \nInput: \"69\"\nOutput: true\n\nInput: \"123\"\nOutput: false\n\nConsider edge cases such as single-digit numbers and numbers containing digits other than 0,1,6,8,9.",
+    "constraints": "1 <= length of num <= 10^5",
+    "sample_input": "818\n",
+    "sample_output": "true\n",
+    "test_case": {
+      "input": "962\n",
+      "output": "false\n",
+      "hidden": false
+    }
+  },
+    {
+    "slug": "chinese-remainder-theorem",
+    "title": "Chinese Remainder Theorem",
+    "difficulty": "🔥",
+    "description": "Given `k` pairwise coprime integers n1, n2, ..., nk and integers a1, a2, ..., ak, find the smallest non-negative integer `x` such that:\n\nx ≡ a1 (mod n1)\nx ≡ a2 (mod n2)\n...\nx ≡ ak (mod nk)\n\nThis problem tests your understanding of modular arithmetic and the Chinese Remainder Theorem.\n\nInput: Two lines.\nFirst line: integer k (1 ≤ k ≤ 10).\nSecond line: k space-separated integers a1..ak followed by k space-separated integers n1..nk.\nOutput: Single integer x satisfying all congruences.\n\nExample:\nInput:\n2\n1 3\n3 5\nOutput:\n7\nExplanation: 7 ≡ 1 mod 3 and 7 ≡ 3 mod 5.",
+    "constraints": "1 <= ai < ni <= 10^6, gcd(ni, nj) = 1 for i ≠ j",
+    "sample_input": "2\n2 3\n3 5\n",
+    "sample_output": "8\n",
+    "test_case": {
+      "input": "3\n1 4 3\n2 5 7\n",
+      "output": "39\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "binary-palindrome",
+    "title": "Binary Palindrome",
+    "difficulty": "🔥",
+    "description": "A number is called a binary palindrome if its binary representation is the same when reversed. Given an integer `n`, determine if its binary representation is a palindrome.\n\nInput: A single integer n.\nOutput: Print 'true' if n is a binary palindrome, otherwise print 'false'.\n\nExamples:\nInput: 9\nOutput: true\nExplanation: Binary of 9 is 1001, which is a palindrome.\nInput: 10\nOutput: false\nExplanation: Binary of 10 is 1010, which is not a palindrome.\n\nConsider edge cases such as n = 0 and n = 1.",
+    "constraints": "0 <= n <= 10^9",
+    "sample_input": "5\n",
+    "sample_output": "true\n",
+    "test_case": {
+      "input": "6\n",
+      "output": "false\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "karatsuba-multiplication",
+    "title": "Karatsuba Multiplication",
+    "difficulty": "🔥",
+    "description": "Implement multiplication of two large integers using the Karatsuba algorithm, which is a divide-and-conquer method that multiplies two n-digit numbers in less than O(n^2) time. Given two integers a and b, print their product using Karatsuba's method.\n\nInput: Two integers a and b separated by space or newline.\nOutput: Single integer equal to a * b.\n\nExample:\nInput: 1234 5678\nOutput: 7006652\n\nThis problem requires efficient multiplication for very large integers, so standard O(n^2) multiplication may be too slow for inputs with hundreds or thousands of digits.",
+    "constraints": "0 <= a, b <= 10^1000",
+    "sample_input": "123 456\n",
+    "sample_output": "56088\n",
+    "test_case": {
+      "input": "987654321 123456789\n",
+      "output": "121932631112635269\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "max-product-subarray",
+    "title": "Maximum Product Subarray",
+    "difficulty": "🔥",
+    "description": "Given an integer array `nums`, find the contiguous subarray (containing at least one number) which has the largest product and return that product.\n\nInput: The first line contains an integer n (size of the array). The second line contains n space-separated integers representing the array elements.\nOutput: A single integer, the maximum product of any contiguous subarray.\n\nExample:\nInput:\n4\n2 3 -2 4\nOutput:\n6\nExplanation: Subarray [2,3] has the largest product 6.\n\nConsider edge cases like negative numbers, zeros, and single-element arrays.",
+    "constraints": "1 <= n <= 10^5, -10^3 <= nums[i] <= 10^3",
+    "sample_input": "4\n2 3 -2 4\n",
+    "sample_output": "6\n",
+    "test_case": {
+      "input": "5\n-2 0 -1 4 3\n",
+      "output": "12\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "longest-common-subsequence-length",
+    "title": "Longest Common Subsequence",
+    "difficulty": "🔥🔥",
+    "description": "Given two strings `text1` and `text2`, find the length of their longest common subsequence (LCS). A subsequence of a string is a sequence that can be derived from the string by deleting some or no characters without changing the order of the remaining characters.\n\nInput: Two lines, first line contains string text1, second line contains string text2.\nOutput: Single integer representing the length of the longest common subsequence.\n\nExample:\nInput:\nabcde\nace\nOutput:\n3\nExplanation: The longest common subsequence is 'ace' with length 3.\n\nConsider edge cases such as empty strings and strings with no common characters.",
+    "constraints": "1 <= length of text1, text2 <= 1000",
+    "sample_input": "abcde\nace\n",
+    "sample_output": "3\n",
+    "test_case": {
+      "input": "abc\ndef\n",
+      "output": "0\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "reverse-linked-list",
+    "title": "Reverse Linked List",
+    "difficulty": "🔥",
+    "description": "Given the head of a singly linked list, reverse the list and return the head of the reversed list.\n\nInput: First line contains an integer n (number of nodes). Second line contains n space-separated integers representing the node values.\nOutput: The reversed list as space-separated integers.\n\nExample:\nInput:\n5\n1 2 3 4 5\nOutput:\n5 4 3 2 1\n\nConsider edge cases like an empty list or a single-node list.",
+    "constraints": "0 <= n <= 10^5, -10^9 <= node value <= 10^9",
+    "sample_input": "5\n1 2 3 4 5\n",
+    "sample_output": "5 4 3 2 1\n",
+    "test_case": {
+      "input": "3\n10 20 30\n",
+      "output": "30 20 10\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "detect-cycle-linked-list",
+    "title": "Detect Cycle in Linked List",
+    "difficulty": "🔥",
+    "description": "Given the head of a singly linked list, determine if the list contains a cycle.\n\nInput: First line contains an integer n (number of nodes). Second line contains n space-separated integers representing node values. Third line contains an integer pos indicating the position (0-indexed) of the node where the tail connects to form a cycle (-1 if no cycle).\nOutput: Print 'true' if there is a cycle, otherwise 'false'.\n\nExample:\nInput:\n3\n3 2 0\n1\nOutput:\ntrue\nExplanation: tail connects to node index 1 forming a cycle.",
+    "constraints": "0 <= n <= 10^5, -10^9 <= node value <= 10^9, -1 <= pos < n",
+    "sample_input": "3\n1 2 3\n-1\n",
+    "sample_output": "false\n",
+    "test_case": {
+      "input": "4\n1 2 3 4\n2\n",
+      "output": "true\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "merge-two-sorted-arrays",
+    "title": "Merge Two Sorted Arrays",
+    "difficulty": "🔥",
+    "description": "Given two sorted integer arrays arr1 and arr2, merge them into a single sorted array.\n\nInput: First line contains integer n (size of arr1), second line n space-separated integers for arr1. Third line contains integer m (size of arr2), fourth line m space-separated integers for arr2.\nOutput: Single line containing all elements of the merged array in ascending order.\n\nExample:\nInput:\n3\n1 3 5\n3\n2 4 6\nOutput:\n1 2 3 4 5 6\n\nConsider edge cases where one array may be empty.",
+    "constraints": "0 <= n, m <= 10^5, -10^9 <= arr[i] <= 10^9",
+    "sample_input": "3\n1 3 5\n3\n2 4 6\n",
+    "sample_output": "1 2 3 4 5 6\n",
+    "test_case": {
+      "input": "2\n-1 0\n3\n-2 1 2\n",
+      "output": "-2 -1 0 1 2\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "maximum-subarray-sum",
+    "title": "Maximum Subarray Sum",
+    "difficulty": "🔥",
+    "description": "Given an integer array nums, find the contiguous subarray with the largest sum and return its sum.\n\nInput: First line contains integer n (size of array). Second line contains n space-separated integers.\nOutput: Single integer, maximum sum of any contiguous subarray.\n\nExample:\nInput:\n5\n-2 1 -3 4 -1\nOutput:\n4\nExplanation: Subarray [4] has the largest sum.\n\nConsider edge cases like all negative numbers and single-element arrays.",
+    "constraints": "1 <= n <= 10^5, -10^4 <= nums[i] <= 10^4",
+    "sample_input": "5\n-2 1 -3 4 -1\n",
+    "sample_output": "4\n",
+    "test_case": {
+      "input": "6\n2 -1 2 3 -5 4\n",
+      "output": "6\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "valid-parentheses",
+    "title": "Valid Parentheses",
+    "difficulty": "🔥",
+    "description": "Given a string s containing only '(', ')', '{', '}', '[' and ']', determine if the input string is valid. An input string is valid if:\n1. Open brackets must be closed by the same type of brackets.\n2. Open brackets must be closed in the correct order.\n\nInput: A single line containing string s.\nOutput: 'true' if the string is valid, 'false' otherwise.\n\nExample:\nInput: \"()[]{}\"\nOutput: true\nInput: \"(]\"\nOutput: false",
+    "constraints": "1 <= length of s <= 10^5",
+    "sample_input": "()[]{}\n",
+    "sample_output": "true\n",
+    "test_case": {
+      "input": "([)]\n",
+      "output": "false\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "find-min-in-rotated-sorted-array",
+    "title": "Find Minimum in Rotated Sorted Array",
+    "difficulty": "🔥",
+    "description": "Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand. Find the minimum element.\n\nInput: First line contains integer n (size of array), second line contains n space-separated integers representing the rotated array.\nOutput: Single integer, the minimum element in the array.\n\nExample:\nInput:\n5\n3 4 5 1 2\nOutput:\n1\nExplanation: 1 is the minimum element.\n\nConsider edge cases such as already sorted array or array with one element.",
+    "constraints": "1 <= n <= 10^5, -10^9 <= nums[i] <= 10^9",
+    "sample_input": "5\n3 4 5 1 2\n",
+    "sample_output": "1\n",
+    "test_case": {
+      "input": "3\n2 3 1\n",
+      "output": "1\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "binary-search",
+    "title": "Binary Search",
+    "difficulty": "🔥🔥",
+    "description": "Given a sorted array arr of size n and an integer target, return the index of target in the array. If target is not present, return -1.\n\nInput: First line contains n, second line n space-separated integers (sorted array), third line contains target integer.\nOutput: Single integer index (0-based) or -1 if not found.\n\nExample:\nInput:\n5\n1 3 5 7 9\n7\nOutput:\n3\nExplanation: 7 is at index 3.\n\nConsider edge cases like target smaller than all elements or larger than all elements.",
+    "constraints": "1 <= n <= 10^5, -10^9 <= arr[i], target <= 10^9",
+    "sample_input": "5\n1 3 5 7 9\n7\n",
+    "sample_output": "3\n",
+    "test_case": {
+      "input": "4\n2 4 6 8\n5\n",
+      "output": "-1\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "merge-k-sorted-lists",
+    "title": "Merge K Sorted Lists",
+    "difficulty": "🔥",
+    "description": "Given k sorted linked lists, merge them into one sorted linked list and return its head.\n\nInput: First line contains integer k, followed by k blocks, each starting with n_i (length of list) and n_i space-separated integers representing each list.\nOutput: Single line containing all elements of the merged list in ascending order.\n\nExample:\nInput:\n2\n3\n1 4 5\n3\n1 3 4\nOutput:\n1 1 3 4 4 5",
+    "constraints": "1 <= k <= 1000, 0 <= n_i <= 10^3, -10^9 <= node value <= 10^9",
+    "sample_input": "2\n3\n1 4 5\n3\n1 3 4\n",
+    "sample_output": "1 1 3 4 4 5\n",
+    "test_case": {
+      "input": "3\n2\n2 6\n2\n1 3\n1\n5\n",
+      "output": "1 2 3 5 6\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "number-of-islands",
+    "title": "Number of Islands",
+    "difficulty": "🔥🔥",
+    "description": "Given a 2D grid map of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically.\n\nInput: First line contains integers m and n (rows and columns). Next m lines contain n characters '0' or '1'.\nOutput: Single integer, number of islands.\n\nExample:\nInput:\n4 5\n11000\n11000\n00100\n00011\nOutput:\n3\nExplanation: There are three islands in the grid.",
+    "constraints": "1 <= m, n <= 300",
+    "sample_input": "4 5\n11000\n11000\n00100\n00011\n",
+    "sample_output": "3\n",
+    "test_case": {
+      "input": "3 3\n111\n010\n111\n",
+      "output": "1\n",
+      "hidden": false
+    }
+  },
+  {
+    "slug": "lowest-common-ancestor-binary-tree",
+    "title": "Lowest Common Ancestor of Binary Tree",
+    "difficulty": "🔥🔥",
+    "description": "Given a binary tree and two nodes p and q, find their lowest common ancestor (LCA).\n\nInput: First line contains n (number of nodes). Next n lines each contain value, left child index, right child index (-1 if null). Last line contains two integers p and q.\nOutput: Single integer, value of the LCA.\n\nExample:\nInput:\n3\n3 1 2\n5 -1 -1\n1 -1 -1\n5 1\nOutput:\n3\nExplanation: The LCA of nodes 5 and 1 is 3.",
+    "constraints": "1 <= n <= 10^5, -10^9 <= node value <= 10^9",
+    "sample_input": "3\n3 1 2\n5 -1 -1\n1 -1 -1\n5 1\n",
+    "sample_output": "3\n",
+    "test_case": {
+      "input": "5\n3 1 4\n5 -1 -1\n1 -1 -1\n6 -1 -1\n2 -1 -1\n5 6\n",
+      "output": "3\n",
+      "hidden": false
+    }
   }
+
 ]

@@ -10,12 +10,23 @@ with app.app_context():
     with open(path, 'r', encoding='utf-8') as f:
         problems = json.load(f)
 
+    updated = 0
     inserted = 0
+
     for p in problems:
         slug = p.get('slug')
-        if slug and db.problems.find_one({'slug': slug}):
+        if not slug:
             continue
-        db.problems.insert_one(p)
-        inserted += 1
 
-    print(f"Seed complete. Inserted {inserted} new problem(s).")
+        result = db.problems.update_one(
+            {'slug': slug},   # filter by slug
+            {'$set': p},      # update all fields
+            upsert=True       # insert if not found
+        )
+
+        if result.matched_count > 0:
+            updated += 1  # existing document was updated
+        else:
+            inserted += 1  # new document inserted
+
+    print(f"Seed complete. Inserted {inserted} new problem(s), Updated {updated} existing problem(s).")
