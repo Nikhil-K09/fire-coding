@@ -500,6 +500,11 @@ nav a:hover {
   font-size: 1rem;
   transition: border-color 0.2s;
 }
+.login-input,
+.login-button {
+  box-sizing: border-box;
+}
+
 
 .login-input:focus {
   border-color: #1bebf2;
@@ -509,6 +514,7 @@ nav a:hover {
 
 /* Button */
 .login-button {
+  width: 100%;   /* ✅ Make it match input width */
   background: #1bebf2;
   color: #fff;
   border: none;
@@ -519,6 +525,7 @@ nav a:hover {
   cursor: pointer;
   transition: background 0.3s;
 }
+
 
 .login-button:hover {
   background: #17c9d1;

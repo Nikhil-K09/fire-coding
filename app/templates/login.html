@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="login-container">
-  <h2 class="login-title">Login</h2>
+  <h2 class="login-title">Sign In</h2>
 
   <form method="POST" action="{{ url_for('auth.login') }}" class="login-form">
     <div class="login-field">
-      <label for="username" class="login-label">Username</label>
+      <label for="username" class="login-label">Username/Email</label>
       <input type="text" id="username" name="username" class="login-input" required>
     </div>
 
@@ -14,13 +14,14 @@
       <input type="password" id="password" name="password" class="login-input" required>
     </div>
 
-    <button type="submit" class="login-button">Login</button>
+    <button type="submit" class="login-button">Sign In</button>
   </form>
 
   <p class="login-register">
     Don't have an account? 
-    <a href="{{ url_for('auth.register') }}" class="login-link">Register here</a>
+    <a href="{{ url_for('auth.register') }}" class="login-link">Sign Up</a>
   </p>
+  
 
   {% with messages = get_flashed_messages() %}
     {% if messages %}
