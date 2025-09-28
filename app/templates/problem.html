@@ -5,7 +5,7 @@
   <!-- LEFT PANEL: problem description -->
   <div class="problem-panel">
     <h2 class="problem-title">{{ problem.title }}</h2>
-    <p class="problem-difficulty">{{ problem.get('difficulty', '') }}</p>
+    <p class="problem-difficulty">Difficulty: {{ problem.get('difficulty', '') }}</p>
 
     <section class="problem-section">
       <h3>Description</h3>
@@ -19,12 +19,12 @@
 
     <section class="problem-section">
       <h4>Sample Input</h4>
-      <pre class="problem-sample">{{ problem.test_case.input }}</pre>
+      <pre class="problem-sample">{{ problem.sample_input }}</pre>
     </section>
 
     <section class="problem-section">
       <h4>Sample Output</h4>
-      <pre class="problem-sample">{{ problem.test_case.output }}</pre>
+      <pre class="problem-sample">{{ problem.sample_output }}</pre>
     </section>
   </div>
 

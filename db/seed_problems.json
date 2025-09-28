@@ -22,8 +22,8 @@
     "sample_input": "10\n",
     "sample_output": "2 3 5 7\n",
     "test_case": {
-      "input": "1\n",
-      "output": "\n",
+      "input": "10\n",
+      "output": "2 3 5 7\n",
       "hidden": false
     }
   },

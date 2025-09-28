@@ -1,16 +1,53 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="problems-page">
-  <h1 class="page-title">Problems</h1>
-  <ul class="problems-list">
-    {% for p in problems %}
-      <li class="problem-item">
-        <a href="/problem/{{ p['_id'] }}">{{ p.title }}</a>
-        <span class="difficulty">{{ p.get('difficulty', '—') }}</span>
-      </li>
-    {% endfor %}
-  </ul>
+<div class="three-columns">
+
+  <!-- LEFT COLUMN (empty for now) -->
+  <div class="left-col">
+    <!-- Future content -->
+  </div>
+
+  <!-- MIDDLE COLUMN (problems list) -->
+  <div class="middle-col">
+    <div class="problems-header">
+      <input type="text" id="search-bar" class="search-input" placeholder="Search problem">
+    </div>
+
+    <div class="problems-container">
+      <ul class="problems-list" id="problems-list">
+        {% for p in problems %}
+          <li class="problem-item {% if p['_id'] in solved_ids %}solved{% endif %}">
+            <a href="/problem/{{ p['_id'] }}" class="problem-link">{{ p.title }}</a>
+            <span class="difficulty">{{ p.get('difficulty', '—') }}</span>
+            {% if p['_id'] in solved_ids %}
+              <span class="status solved-status">✔ Solved</span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN (empty for now) -->
+  <div class="right-col">
+    <!-- Future content -->
+  </div>
+
 </div>
+
+<script>
+// Live search only
+const searchBar = document.getElementById('search-bar');
+const problemsList = document.getElementById('problems-list').getElementsByTagName('li');
+
+searchBar.addEventListener('input', function () {
+  const query = this.value.toLowerCase();
+  for (let li of problemsList) {
+    const text = li.querySelector('.problem-link').textContent.toLowerCase();
+    li.style.display = text.includes(query) ? '' : 'none';
+  }
+});
+</script>
 
 {% endblock %}

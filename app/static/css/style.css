@@ -27,8 +27,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 1%;
-  padding-right: 1%;
+  padding: 0 1%;
   height: 40px;
 }
 
@@ -49,22 +48,20 @@ nav .username {
 
 nav a {
   padding: 6px 12px;
-  font-weight: 600;
-  font-size: 30px;
+  font-weight: 300;
+  font-size: 20px;
+  height: 25px;
+  width: max-content;
   color: #ffffff;
   text-decoration: none;
   transition: color 0.2s ease, border-color 0.2s ease;
-
-  border: 2px solid #313131;   /* Fire orange border */
-  border-radius: 6px;          /* Rounded corners */
+  border: 2px solid #313131;
+  border-radius: 6px;
 }
-
-
 nav a:hover {
-  color: #FF7A00;              /* Change text to fire orange */
-  border-color: #e8e8e8;       /* Darker orange/red on hover */
+  color: #FF7A00;
+  border-color: #e8e8e8;
 }
-
 
 /* User Dropdown */
 .user-dropdown {
@@ -77,24 +74,15 @@ nav a:hover {
   cursor: pointer;
 }
 
-
-
-/* ================== CONTAINERS ================== */
+/* ================== GENERAL CONTAINER ================== */
 .container {
   padding: 20px;
   max-width: 1100px;
   margin: 0 auto;
 }
 
-/* ================== PROBLEMS LIST ================== */
-.problems-page {
-  background-color: #f3f4f6;
-  min-height: 100vh;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+/* ================== PROBLEMS LIST PAGE ================== */
+
 
 .page-title {
   font-size: 36px;
@@ -103,16 +91,67 @@ nav a:hover {
   color: #111827;
 }
 
+.three-columns {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr; /* left | middle | right */
+  gap: 20px;
+  min-height: 100vh;
+  padding: 20px;
+  background: #f3f4f6;
+}
+
+.left-col,
+.right-col {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  padding: 20px;
+  min-height: 80vh;
+}
+
+.problems-page {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr; /* left | middle | right */
+  gap: 20px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.middle-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;   /* <-- force left alignment */
+}
+
+.problems-header {
+  width: 100%;               /* span full middle column */
+  display: flex;
+  justify-content: flex-start; /* stick to the left */
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 100%;     /* take full middle column width */
+  max-width: 400px; /* optional, remove if you want full stretch */
+  padding: 0.6rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+
+
+/* Problems List */
 .problems-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  width: 60%;
 }
 
 .problem-item {
   background: #e5e7eb;
   margin: 12px 0;
+  width: 700px;
   padding: 16px 20px;
   border-radius: 8px;
   display: flex;
@@ -120,104 +159,124 @@ nav a:hover {
   align-items: center;
   transition: background 0.2s ease;
 }
-
 .problem-item:hover {
   background: #d1d5db;
 }
+.problem-item.solved .problem-link {
+  color: green;
+}
 
-.problem-item a {
+.problem-link {
   font-size: 20px;
   font-weight: 600;
   text-decoration: none;
   color: #111827;
 }
 
-/* Difficulty Badge */
 .difficulty {
   display: inline-block;
+  font-size: 0.85rem;
   font-weight: bold;
-  background: #e5e7eb;
+  background: #eee;
   color: #374151;
-  padding: 4px 10px;
-  border-radius: 6px;
-  margin-bottom: 15px;
-  font-size: 14px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 10px;
 }
 
-/* ================== EDITOR / PROBLEM PAGE ================== */
+.status.solved-status {
+  font-size: 0.8rem;
+  color: green;
+  margin-left: 10px;
+}
+
+/* ================== PROBLEM + EDITOR PAGE ================== */
 .problem-page {
   display: flex;
-  gap: 0;
-  padding: 30px;
-  background-color: #f3f4f6;
-  min-height: calc(100vh - 80px);
-  overflow: hidden;
-}
-
-.problem-panel, .editor-panel {
-  background: #ffffff;
+  gap: 24px;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-  overflow: auto;
+  height: calc(100vh - 100px);
 }
 
-.problem-panel {
-  width: 35%;
-}
-
+/* Panels */
+.problem-panel,
 .editor-panel {
-  width: 65%;
+  flex: 1;
+  padding: 16px;
+  border-radius: 8px;
+  background: #1f2937;
+  color: #f9fafb;
+  overflow: auto;
+  resize: horizontal;
+  min-width: 40%;
 }
 
+.problem-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+.problem-difficulty {
+  font-size: 16px;
+  font-weight: 600;
+  color: #60a5fa;
+  margin-bottom: 16px;
+}
 
-/* Problem Statement Styling */
-.problem-statement pre {
-  background: #f3f4f6;
+.problem-section {
+  margin-bottom: 20px;
+}
+.problem-section h3,
+.problem-section h4 {
+  margin-bottom: 6px;
+  font-weight: 700;
+  color: #d1d5db;
+}
+
+.problem-sample {
+  background: #111827;
   padding: 10px;
   border-radius: 6px;
-  overflow-x: auto;
-  border: 1px solid #d1d5db;
+  font-family: monospace;
 }
 
-.editor-panel label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: bold;
-  color: #111827;
+/* Editor */
+.editor-label {
+  font-weight: 600;
+  margin-right: 8px;
 }
-
-.editor-panel select {
-  width: 100%;
-  padding: 6px 10px;
+.editor-lang {
   margin-bottom: 12px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
-  font-size: 16px;
+  padding: 6px;
+  border-radius: 4px;
+  border: none;
 }
-
 #editor {
-  height: 400px;
+  width: 100%;
+  height: 420px;
+  font-family: monospace;
   border-radius: 6px;
-  margin-bottom: 12px;
 }
 
 /* Buttons */
+.buttons {
+  margin: 12px 0;
+}
 .buttons button {
-  background: #1e40af;
+  background: #FF4500;
   color: #fff;
-  font-weight: bold;
-  padding: 8px 16px;
+  font-weight: 600;
   border: none;
-  border-radius: 6px;
+  padding: 8px 14px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s;
 }
-
 .buttons button:hover {
-  background: #1d4ed8;
+  background: #f77d50;
 }
 
+/* Output / Result */
 #output {
   background: #f3f4f6;
   padding: 12px;
@@ -226,10 +285,18 @@ nav a:hover {
   min-height: 60px;
   overflow-x: auto;
 }
+.test-result {
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-family: monospace;
+}
+.test-result.accepted { color: #10b981; }
+.test-result.rejected { color: #ef4444; }
 
 /* ================== PROFILE PAGE ================== */
 .profile-container {
-  padding: 30px;
+  padding: 60px;
   background-color: #f5f6fa;
   min-height: calc(100vh - 100px);
 }
@@ -238,7 +305,7 @@ nav a:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 }
 
 .logout-btn {
@@ -254,14 +321,8 @@ nav a:hover {
   border-radius: 6px;
   transition: background 0.2s ease;
 }
-
-.logout-btn:hover {
-  background: #b1b1b1;
-}
-
-.logout-icon {
-  font-size: 20px;
-}
+.logout-btn:hover { background: #b1b1b1; }
+.logout-icon { font-size: 20px; }
 
 .profile-container h2 {
   margin-bottom: 20px;
@@ -269,6 +330,7 @@ nav a:hover {
   color: #111827;
 }
 
+/* Submissions Table */
 .submissions-card {
   background: #ffffff;
   border-radius: 8px;
@@ -276,165 +338,35 @@ nav a:hover {
   box-shadow: 0 4px 8px rgba(0,0,0,0.05);
   overflow-x: auto;
 }
-
 .submissions-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 16px;
 }
 
-.submissions-table thead {
-  background: #1e1e1e;
-  color: #ffffff;
-}
-
-.submissions-table th, 
-.submissions-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid #e0e0e0;
+.submissions-table th, .submissions-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
   text-align: left;
 }
 
-.submissions-table tr:hover {
-  background: #f0f4f8;
+.submissions-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
 }
 
-/* Status Badges */
 .status {
-  font-weight: bold;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-.status.accepted {
-  color: #155724;
-  background: #d4edda;
-}
-
-.status.rejected {
-  color: #721c24;
-  background: #f8d7da;
-}
-
-.status.pending {
-  color: #856404;
-  background: #fff3cd;
-}
-
-.status.gray {
-  color: #6c757d;
-  background: #e9ecef;
-}
-
-/* ================== OTHER UI ELEMENTS ================== */
-.problem-page {
-  display: flex;
-  gap: 24px;
-  padding: 20px;
-  height: calc(100vh - 100px);
-}
-
-/* Make panels resizable horizontally */
-.problem-panel, .editor-panel {
-  flex: 1;
-  padding: 16px;
-  border-radius: 8px;
-  background: #1f2937; /* dark gray */
-  color: #f9fafb;
-  overflow: auto;
-  resize: horizontal; /* resizable horizontally */
-  min-width: 40%;
-}
-
-/* Titles */
-.problem-title {
-  font-size: 28px;
-  font-weight: 800;
-  margin-bottom: 8px;
-}
-
-.problem-difficulty {
-  font-size: 16px;
   font-weight: 600;
-  color: #60a5fa; /* blue highlight */
-  margin-bottom: 16px;
-}
-
-/* Sections */
-.problem-section {
-  margin-bottom: 20px;
-}
-
-.problem-section h3,
-.problem-section h4 {
-  margin-bottom: 6px;
-  font-weight: 700;
-  color: #d1d5db;
-}
-
-/* Samples */
-.problem-sample {
-  background: #111827;
-  padding: 10px;
-  border-radius: 6px;
-  font-family: monospace;
-}
-
-/* Editor Panel */
-.editor-label {
-  font-weight: 600;
-  margin-right: 8px;
-}
-
-.editor-lang {
-  margin-bottom: 12px;
-  padding: 6px;
+  padding: 3px 6px;
   border-radius: 4px;
-  border: none;
+  color: white;
 }
 
-#editor {
-  width: 100%;
-  height: 420px;
-  font-family: monospace;
-  border-radius: 6px;
-}
+.status--accepted { background-color: #28a745; }
+.status--rejected { background-color: #dc3545; }
+.status--pending { background-color: #ffc107; color: black; }
+.status--gray { background-color: #6c757d; }
 
-.buttons {
-  margin: 12px 0;
-}
-
-.buttons button {
-  background: #FF4500;
-  border: none;
-  padding: 8px 14px;
-  font-weight: 600;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.buttons button:hover {
-  background: #f77d50;
-}
-
-/* Result status */
-.test-result {
-  padding: 10px;
-  border-radius: 6px;
-  font-weight: 700;
-  font-family: monospace;
-}
-
-.test-result.accepted {
-  color: #10b981; /* green */
-}
-
-.test-result.rejected {
-  color: #ef4444; /* red */
-}
-/* Container */
+/* ================== LOGIN PAGE ================== */
 .login-container {
   max-width: 400px;
   margin: 80px auto;
@@ -445,39 +377,29 @@ nav a:hover {
   text-align: center;
   font-family: Arial, sans-serif;
 }
-
-/* Title */
+.logo-img {
+  height: 50px;
+  width: auto;
+  display: block;
+}
 .login-title {
   font-size: 1.8rem;
   margin-bottom: 1.5rem;
   color: #333;
 }
-.logo-img {
-  height: 50px;   /* adjust as needed */
-  width: auto;    /* keeps aspect ratio */
-  display: block;
-}
 
-
-/* Form */
 .login-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
-
-/* Fields */
-.login-field {
-  text-align: left;
-}
-
+.login-field { text-align: left; }
 .login-label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: bold;
   color: #444;
 }
-
 .login-input {
   width: 100%;
   padding: 0.7rem;
@@ -485,22 +407,15 @@ nav a:hover {
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.2s;
-}
-.login-input,
-.login-button {
   box-sizing: border-box;
 }
-
-
 .login-input:focus {
   border-color: #FF7A00;
   outline: none;
   box-shadow: 0 0 5px rgba(27, 235, 242, 0.4);
 }
-
-/* Button */
 .login-button {
-  width: 100%;   /* ✅ Make it match input width */
+  width: 100%;
   background: #FF7A00;
   color: #fff;
   border: none;
@@ -510,29 +425,20 @@ nav a:hover {
   font-weight: bold;
   cursor: pointer;
   transition: background 0.3s;
+  box-sizing: border-box;
 }
-
-
-.login-button:hover {
-  background: #fa622b;
-}
-
-/* Register link */
+.login-button:hover { background: #fa622b; }
 .login-register {
   margin-top: 1.2rem;
   font-size: 0.95rem;
   color: #555;
 }
-
 .login-link {
   color: #FF7A00;
   text-decoration: none;
   font-weight: bold;
 }
-
-.login-link:hover {
-  text-decoration: underline;
-}
+.login-link:hover { text-decoration: underline; }
 
 /* Flash messages */
 .login-flash {
@@ -540,7 +446,6 @@ nav a:hover {
   padding: 0;
   list-style: none;
 }
-
 .login-flash-item {
   background: #ffecec;
   color: #fa622b;

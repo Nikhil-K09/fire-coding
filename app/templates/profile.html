@@ -3,13 +3,17 @@
 
 <div class="profile-container">
   <div class="profile-header">
-    <h2>My Profile</h2>
-    <a href="{{ url_for('auth.logout') }}" class="logout-btn">
-      Sign Out
-    </a>
+    <h2>{{ username }}</h2>
+    <a href="{{ url_for('auth.logout') }}" class="logout-btn">Sign Out</a>
   </div>
 
-  <h3>My Submissions</h3>
+  <div class="profile-stats" style="margin-bottom: 30px;">
+    <p><strong>Solved Problems: </strong> {{ solved_count }}</p>
+  </div>
+
+  <div id="heatmap" class="heatmap" style="display:flex; justify-content:center; margin-bottom:40px;"></div>
+
+  <h3 style="padding-bottom: 7px;">Submissions</h3>
   <table class="submissions-table">
     <thead>
       <tr>
@@ -28,14 +32,14 @@
           <td>
             {% if sub.test_case_result %}
               {% if sub.test_case_result.status == "Accepted" %}
-                <span class="status accepted">Accepted</span>
+                <span class="status status--accepted">Accepted</span>
               {% elif sub.test_case_result.status == "Rejected" %}
-                <span class="status rejected">Rejected</span>
+                <span class="status status--rejected">Rejected</span>
               {% else %}
-                <span class="status pending">{{ sub.test_case_result.status }}</span>
+                <span class="status status--pending">{{ sub.test_case_result.status }}</span>
               {% endif %}
             {% else %}
-              <span class="status gray">Pending</span>
+              <span class="status status--gray">Pending</span>
             {% endif %}
           </td>
         </tr>
@@ -43,5 +47,87 @@
     </tbody>
   </table>
 </div>
+
+<!-- Heatmap Script -->
+<!-- Fixed 7x54 Heatmap -->
+
+
+<script src="https://d3js.org/d3.v6.min.js"></script>
+<script>
+  const solvedDates = new Set({{ solved_dates|tojson }});
+
+  const rows = 7;      // days in a week
+  const cols = 54;     // fixed weeks
+  const cellSize = 18; // slightly larger cells
+  const cellPadding = 4;
+
+  const svgWidth = cols * (cellSize + cellPadding) + 50; // extra space for month labels
+  const svgHeight = rows * (cellSize + cellPadding) + 25; // extra for top labels
+
+  const svg = d3.select("#heatmap")
+    .append("svg")
+    .attr("width", svgWidth)
+    .attr("height", svgHeight);
+
+  const today = new Date();
+  const startDate = new Date(today);
+  startDate.setDate(today.getDate() - (rows*cols - 1));
+
+  // Generate 7x54 grid of dates
+  const days = [];
+  for (let i = 0; i < rows * cols; i++) {
+    const d = new Date(startDate);
+    d.setDate(startDate.getDate() + i);
+    days.push(d);
+  }
+
+  function formatDateLocal(d) {
+    const year = d.getFullYear();
+    const month = (d.getMonth()+1).toString().padStart(2,'0');
+    const day = d.getDate().toString().padStart(2,'0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // Draw cells
+  svg.selectAll("rect")
+    .data(days)
+    .enter()
+    .append("rect")
+    .attr("width", cellSize)
+    .attr("height", cellSize)
+    .attr("x", (d,i) => Math.floor(i/rows) * (cellSize + cellPadding) + 40) // shift right for month labels
+    .attr("y", d => d.getDay() * (cellSize + cellPadding) + 20) // shift down for month labels
+    .attr("fill", d => solvedDates.has(formatDateLocal(d)) ? "#FF7A00" : "#e0e0e0")
+    .attr("rx", 4)
+    .attr("ry", 4);
+
+  // Month labels
+  const months = d3.timeMonths(days[0], today);
+  svg.selectAll("text")
+    .data(months)
+    .enter()
+    .append("text")
+    .attr("x", d => {
+      const i = days.findIndex(day => day.getMonth() === d.getMonth() && day.getDate() === 1);
+      return Math.floor(i/rows) * (cellSize + cellPadding) + 40;
+    })
+    .attr("y", 12)
+    .text(d => d3.timeFormat("%b")(d))
+    .style("font-size", "12px")
+    .style("fill", "#555")
+    .style("font-weight", "600");
+
+  // Day labels (optional, Mon, Wed, Fri)
+  const dayLabels = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  svg.selectAll(".dayLabel")
+    .data(dayLabels)
+    .enter()
+    .append("text")
+    .attr("x", 0)
+    .attr("y", (d,i) => i * (cellSize + cellPadding) + 20 + cellSize/1.5)
+    .text(d => d)
+    .style("font-size", "10px")
+    .style("fill", "#555");
+</script>
 
 {% endblock %}

@@ -19,7 +19,7 @@
 
         {% if current_user.is_authenticated %}
           <div class="user-dropdown">
-            <a href="{{ url_for('main.profile') }}" class="username">{{ current_user.username }}</a>
+            <a href="{{ url_for('main.my_profile') }}" class="username">{{ current_user.username }}</a>
           </div>
         {% else %}
           <a href="{{ url_for('auth.login') }}">Login</a>
