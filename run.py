@@ -6,4 +6,7 @@ app.jinja_env.globals.update(enumerate=enumerate)
 
 if __name__ == '__main__':
     # change host to 0.0.0.0 if you want external access
-    app.run(debug=True, port=5000)
+    app.run(
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 5000))
+    )
