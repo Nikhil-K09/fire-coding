@@ -8,7 +8,6 @@ const langModes = {
 };
 
 const langSelect = document.getElementById('lang');
-const stdoutEl = document.getElementById('output');
 const textarea = document.getElementById('editor');
 
 let editor = CodeMirror.fromTextArea(textarea, {
@@ -22,13 +21,13 @@ let editor = CodeMirror.fromTextArea(textarea, {
   extraKeys: { "Ctrl-Enter": () => runCode() }
 });
 
-// load starter code for selected language
+// load starter code
 function loadStarterFor(langId) {
   editor.setValue(STARTER_MAP[langId] || '');
 }
 loadStarterFor(langSelect.value);
 
-// language switch handler
+// switch language
 langSelect.addEventListener('change', e => {
   const newLang = e.target.value;
   editor.setOption('mode', langModes[newLang] || 'text/x-c++src');
@@ -37,7 +36,6 @@ langSelect.addEventListener('change', e => {
   const prevStarter = STARTER_MAP[langSelect.value] || '';
   const newStarter = STARTER_MAP[newLang] || '';
 
-  // only replace code if it's still default / empty
   if (!current || current === prevStarter) {
     loadStarterFor(newLang);
   }
@@ -51,8 +49,19 @@ async function runCode() {
     problem_id: PROBLEM_ID
   };
 
-  stdoutEl.textContent = '⚙️ Running...\n';
-  stdoutEl.classList.remove("accepted", "rejected");
+  // UI refs
+  const resultBox = document.getElementById('result-box');
+  const outputEl = document.getElementById('output');
+  const errorBox = document.getElementById('error-box');
+
+  // reset UI
+  resultBox.style.display = 'none';
+  resultBox.className = 'result-box';
+  resultBox.textContent = '';
+  outputEl.textContent = '⚙️ Running...';
+  outputEl.classList.remove('accepted', 'rejected');
+  errorBox.style.display = 'none';
+  errorBox.textContent = '';
 
   try {
     const res = await fetch('/submit', {
@@ -62,39 +71,50 @@ async function runCode() {
     });
     const data = await res.json();
 
-    stdoutEl.textContent = ""; // clear previous
+    if (data.status === 'Error') {
+      errorBox.style.display = 'block';
+      errorBox.textContent =
+        data.compile_output || data.stderr || data.error || 'Unknown error';
 
-    switch (data.status) {
-      case "Accepted":
-        stdoutEl.textContent = "✅ Accepted";
-        stdoutEl.classList.add("accepted");
-        break;
-
-      case "Rejected":
-        let rejMsg = "❌ Rejected\n";
-        if (data.stdout) rejMsg += `Your Output:\n${data.stdout}\n`;
-        if (data.expected) rejMsg += `Expected Output:\n${data.expected}\n`;
-        stdoutEl.textContent = rejMsg;
-        stdoutEl.classList.add("rejected");
-        break;
-
-      case "Error":
-        let errMsg = "⚠️ Error\n";
-        if (data.error) errMsg += `${data.error}\n`;
-        if (data.stderr) errMsg += `${data.stderr}\n`;
-        stdoutEl.textContent = errMsg;
-        stdoutEl.classList.add("rejected");
-        break;
-
-      default:
-        stdoutEl.textContent = "⚠️ Unknown response from server.";
-        stdoutEl.classList.add("rejected");
-        break;
+      outputEl.textContent =
+        (data.stdout && data.stdout.trim()) ? `Output:\n${data.stdout}` : '';
+      outputEl.classList.add('rejected');
+      return;
     }
 
+    if (data.status === 'Accepted') {
+      resultBox.style.display = 'block';
+      resultBox.classList.add('accepted');
+      resultBox.textContent = 'Accepted';
+
+      outputEl.textContent = data.stdout || '(no output)';
+      return;
+    }
+
+    if (data.status === 'Rejected') {
+      resultBox.style.display = 'block';
+      resultBox.classList.add('rejected');
+      resultBox.textContent = 'Rejected';
+
+      let html = '';
+      if (data.stdout) html += `Your Output:\n${data.stdout}\n\n`;
+      if (data.expected) html += `Expected Output:\n${data.expected}\n\n`;
+      outputEl.textContent = html || '(no output)';
+      return;
+    }
+
+    // fallback
+    resultBox.style.display = 'block';
+    resultBox.classList.add('rejected');
+    resultBox.textContent = 'Unknown response from server';
+
   } catch (err) {
-    stdoutEl.textContent = '⚠️ Request Failed: ' + err.message;
-    stdoutEl.classList.add("rejected");
+    errorBox.style.display = 'block';
+    errorBox.textContent = err.message || String(err);
+
+    resultBox.style.display = 'block';
+    resultBox.classList.add('rejected');
+    resultBox.textContent = 'Request Failed';
   }
 }
 

@@ -1,32 +1,32 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="ide-container" style="max-width: 1000px; margin: 20px auto;">
-  <div class="editor-panel">
-    <label for="lang" class="editor-label">Language</label>
-    <select id="lang" class="editor-lang">
+<div class="ide-page">
+  <div class="ide-panel">
+    <div class="ide-header">
+      <label for="lang" class="editor-label">Language</label>
+      <select id="lang" class="editor-lang">
         <option value="54" selected>C++ (g++)</option>
         <option value="71">Python 3</option>
         <option value="62">Java</option>
         <option value="50">C</option>
         <option value="51">C#</option>
         <option value="46">Bash</option>
-    </select>
+      </select>
+    </div>
 
     <textarea id="editor">// Write your code here</textarea>
 
-    <!-- Input for Judge0 -->
-    <label for="input" class="editor-label">Input</label>
-    <textarea id="input" class="editor-input" placeholder="Enter custom input here"></textarea>
+    <label for="input" class="editor-label">Custom Input</label>
+    <textarea id="input" class="editor-input" placeholder="Enter input here..."></textarea>
 
     <div class="buttons">
-        <button id="run">▶ Run Code</button>
+      <button id="run" class="run-btn">▶ Run Code</button>
     </div>
 
-    <h4>Output</h4>
+    <h4 class="output-title">Output</h4>
     <pre id="output" class="test-result">Click Run</pre>
-    </div>
-
+  </div>
 </div>
 
 <!-- CodeMirror -->
@@ -66,15 +66,48 @@ document.getElementById("run").addEventListener("click", async () => {
   const lang_id = document.getElementById("lang").value;
   const input = document.getElementById("input").value;
 
-  const response = await fetch("/ide_submit", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ code, lang_id, input })
-  });
+  const outputEl = document.getElementById("output");
+  outputEl.textContent = "⚙️ Running...\n";
+  outputEl.classList.remove("accepted", "rejected");
 
-  const result = await response.json();
-  document.getElementById("output").textContent = 
-    `Status: ${result.status}\nOutput:\n${result.stdout}\nErrors:\n${result.stderr}`;
+  try {
+    const response = await fetch("/ide_submit", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ code, lang_id, input })
+    });
+
+    const result = await response.json();
+    outputEl.textContent = "";
+
+    switch (result.status) {
+      case "Accepted":
+        outputEl.textContent = `${result.stdout}`;
+        outputEl.classList.add("accepted");
+        break;
+
+      case "Error":
+        let errMsg = "⚠️ Error\n";
+        if (result.stderr) errMsg += `${result.stderr}\n`;
+        outputEl.textContent = errMsg;
+        outputEl.classList.add("rejected");
+        break;
+
+      case "No Output":
+        outputEl.textContent = "❌ No Output Produced";
+        outputEl.classList.add("rejected");
+        break;
+
+      default:
+        outputEl.textContent = "⚠️ Unknown response from server.";
+        outputEl.classList.add("rejected");
+        break;
+    }
+
+  } catch (err) {
+    outputEl.textContent = "⚠️ Request Failed: " + err.message;
+    outputEl.classList.add("rejected");
+  }
 });
 
 </script>

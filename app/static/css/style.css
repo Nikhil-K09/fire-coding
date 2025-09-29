@@ -208,6 +208,7 @@ nav a:hover {
   color: #f9fafb;
   overflow: auto;
   resize: horizontal;
+  height: 800px;
   min-width: 40%;
 }
 
@@ -241,27 +242,17 @@ nav a:hover {
 }
 
 /* Editor */
-.editor-label {
-  font-weight: 600;
-  margin-right: 8px;
-}
-.editor-lang {
-  margin-bottom: 12px;
-  padding: 6px;
-  border-radius: 4px;
-  border: none;
-}
+
 #editor {
   width: 100%;
-  height: 420px;
+  height: 800px;
+  padding: 5px;
   font-family: monospace;
   border-radius: 6px;
 }
 
 /* Buttons */
-.buttons {
-  margin: 12px 0;
-}
+
 .buttons button {
   background: #FF4500;
   color: #fff;
@@ -278,21 +269,188 @@ nav a:hover {
 
 /* Output / Result */
 #output {
-  background: #f3f4f6;
   padding: 12px;
   border-radius: 6px;
   border: 1px solid #d1d5db;
   min-height: 60px;
   overflow-x: auto;
 }
+.ide-page {
+  height: calc(100vh - 60px); /* adjust for navbar */
+  
+  padding: 55px;
+}
+
+.ide-panel {
+  height: 800px;
+}
+
+
+
+.buttons {
+  margin: 10px 0;
+}
+
+.run-btn {
+  padding: 8px 14px;
+  background: #0078d7;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.run-btn:hover {
+  background: #005fa3;
+}
+
+.ide-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 20px auto;
+  width: 100%;
+}
+
+.ide-container {
+  width: 70%;              /* occupy 70% of window */
+  background: #1e1e1e;     /* IDE-like dark background */
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.5);
+  color: #f1f1f1;
+}
+
+.editor-header {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.editor-label {
+  font-weight: bold;
+  padding-bottom: 8px;
+}
+
+.editor-lang {
+  padding: 5px;
+  background: #2d2d2d;
+  color: #f1f1f1;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding-bottom: 8px;
+}
+
+.CodeMirror {
+  height: 800px;          /* editor height */
+  font-size: 14px;
+  border-radius: 6px;
+  padding: 20px;
+  background: #1e1e1e;
+  color: #f1f1f1;
+}
+
+.editor-input {
+  width: 100%;
+  height: 100px;
+  margin: 10px 0;
+  padding: 10px;
+  background: #2d2d2d;
+  color: #f1f1f1;
+  border: 1px solid #444;
+  border-radius: 4px;
+}
+
+.buttons {
+  margin: 10px 0;
+}
+
+#run {
+  padding: 8px 14px;
+  background: #007acc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#run:hover {
+  background: #005a9e;
+}
+
 .test-result {
+  background: #2d2d2d;
+  padding: 10px;
+  border-radius: 4px;
+  color: #f1f1f1;
+  min-height: 100px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.test-result.accepted { border: 1px solid #28a745; }
+.test-result.rejected { border: 1px solid #dc3545; }
+.test-result.error { border: 1px solid #ff9800; }
+
+.status-icon {
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+
+.test-result-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.result-summary { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.result-icon { width:20px; height:20px; }
+.test-result {
+  color: #fff;
+  background: #111827;
   padding: 10px;
   border-radius: 6px;
-  font-weight: 700;
-  font-family: monospace;
+  min-height: 40px;
+  white-space: pre-wrap;
 }
-.test-result.accepted { color: #10b981; }
-.test-result.rejected { color: #ef4444; }
+.error-box {
+  display: none;
+  margin-top: 8px;
+  background: #3b0f0f;      /* dark red */
+  color: #ffdede;
+  padding: 10px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  overflow: auto;
+  max-height: 240px;
+}
+/* Base style for result */
+.result-box {
+  display: none;
+  margin-top: 8px;
+  padding: 10px;
+  width: max-content;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  overflow: auto;
+  max-height: 240px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Accepted (green) */
+.result-box.accepted {
+  background: #0fd340;   /* dark green */
+  color: #d8ffd8;
+}
+
+/* Rejected (red, same tone as error) */
+.result-box.rejected {
+  background: #f13333;
+  color: #fdc7c7;
+}
 
 /* ================== PROFILE PAGE ================== */
 .profile-container {
@@ -378,7 +536,7 @@ nav a:hover {
   font-family: Arial, sans-serif;
 }
 .logo-img {
-  height: 50px;
+  height: 45px;
   width: auto;
   display: block;
 }
