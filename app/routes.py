@@ -2,16 +2,16 @@ from flask import Blueprint, render_template, request, jsonify, abort, redirect,
 from flask_login import login_required, current_user
 from bson.objectid import ObjectId
 from datetime import datetime
+import pytz
 from . import mongo
 from .judge0 import run_code
-import pytz
 
 main = Blueprint('main', __name__)
 
 # ================== HOME PAGE ==================
 @main.route('/')
 def index():
-    problems = list(mongo.db.problems.find({}, {"title":1, "difficulty":1}))
+    problems = list(mongo.db.problems.find({}, {"title": 1, "difficulty": 1}))
     for p in problems:
         p['_id'] = str(p['_id'])
     return render_template('index.html', problems=problems)
@@ -49,18 +49,19 @@ def my_profile():
 @main.route('/profile/<username>')
 @login_required
 def user_profile(username):
-    # Fetch user profile
     profile = mongo.db.profiles.find_one({"username": username})
     if not profile:
         abort(404)
 
-    # Fetch submissions
-    subs = list(mongo.db.submissions.find({"username": username}).sort("submitted_at", -1))
+    # Use user_id string consistently
+    subs = list(mongo.db.submissions.find({"user_id": profile["user_id"]}).sort("submitted_at", -1))
     for s in subs:
         s['_id'] = str(s['_id'])
-        s['submitted_at'] = s['submitted_at'].strftime("%Y-%m-%d %H:%M:%S")
+        if isinstance(s['submitted_at'], datetime):
+            s['submitted_at'] = s['submitted_at'].strftime("%Y-%m-%d %H:%M:%S")
 
-    solved_dates = profile.get("solved_dates", [])
+    solved_entries = list(mongo.db.solved.find({"user_id": profile["user_id"]}))
+    solved_dates = [se['solved_at'].strftime("%Y-%m-%d") for se in solved_entries]
     solved_count = len(solved_dates)
 
     return render_template(
@@ -71,14 +72,8 @@ def user_profile(username):
         submissions=subs
     )
 
-# ================== SUBMIT CODE ==================
-# routes.py (inside your blueprint)
-from flask import request, jsonify
-from flask_login import login_required, current_user
-from bson.objectid import ObjectId
-from datetime import datetime
-import pytz
 
+# ================== SUBMIT CODE ==================
 @main.route('/submit', methods=['POST'])
 @login_required
 def submit():
@@ -96,50 +91,38 @@ def submit():
     expected_output = str(test_case.get("output", "")).strip()
 
     try:
-        # run_code should call Judge0 and return a parsed JSON result
         result = run_code(code, lang_id, input_data)
     except Exception as e:
-        # network / API error
-        err = str(e)
-        return jsonify({"status": "Error", "error": err}), 500
+        return jsonify({"status": "Error", "error": str(e)}), 500
 
-    # Extract judge outputs (be defensive)
     stdout = (result.get("stdout") or "").strip()
     stderr = (result.get("stderr") or "").strip()
     compile_output = (result.get("compile_output") or "").strip()
     judge_status = result.get("status", {}).get("description", "") or ""
 
-    # Determine overall status
+    # Determine status
     if compile_output:
-        status = "Error"
-        error_message = compile_output
+        status, error_message = "Error", compile_output
     elif stderr and ("runtime" in judge_status.lower() or "error" in judge_status.lower()):
-        status = "Error"
-        error_message = stderr
+        status, error_message = "Error", stderr
     else:
-        # If judge marks accepted OR output matches expected -> Accepted
         if judge_status.lower() == "accepted" or stdout == expected_output:
-            # final acceptance depends on exact match to expected
             status = "Accepted" if stdout == expected_output else "Rejected"
             error_message = ""
         else:
-            # other statuses (TLE, RTE, WA etc.)
-            # treat statuses that include "time limit", "memory", "runtime", "error" as Error
             lower = judge_status.lower()
             if any(k in lower for k in ("time limit", "memory", "runtime", "error", "crash")):
-                status = "Error"
-                error_message = stderr or compile_output or judge_status
+                status, error_message = "Error", stderr or compile_output or judge_status
             else:
-                # default to Rejected (wrong answer)
-                status = "Rejected"
-                error_message = ""
+                status, error_message = "Rejected", ""
 
-    # Save submission with timezone-aware datetime
+    # Store with local IST (for heatmap later we can switch to UTC if needed)
     ist = pytz.timezone("Asia/Kolkata")
     local_time = datetime.now(ist)
 
     mongo.db.submissions.insert_one({
         "user_id": current_user.id,
+        "username": current_user.username,
         "problem_id": problem_id,
         "problem_title": problem['title'],
         "lang": lang_id,
@@ -155,7 +138,7 @@ def submit():
         }
     })
 
-    # Update solved collection only once per user/problem
+    # Update solved only once
     if status == "Accepted":
         solved_entry = mongo.db.solved.find_one({
             "user_id": current_user.id,
@@ -169,7 +152,6 @@ def submit():
                 "solved_at": local_time
             })
 
-    # Return structured info to frontend
     return jsonify({
         "status": status,
         "judge_status": judge_status,
@@ -182,15 +164,18 @@ def submit():
     })
 
 
+# ================== IDE ==================
 @main.route('/ide')
 @login_required
 def ide():
     return render_template('ide.html')
 
+
 @main.route('/contests')
 @login_required
 def contests():
     return render_template('contests.html')
+
 
 @main.route('/ide_submit', methods=['POST'])
 @login_required
@@ -213,9 +198,7 @@ def ide_submit():
             status = "No Output"
 
     except Exception as e:
-        stdout = ""
-        stderr = str(e)
-        status = "Error"
+        stdout, stderr, status = "", str(e), "Error"
 
     return jsonify({
         "status": status,

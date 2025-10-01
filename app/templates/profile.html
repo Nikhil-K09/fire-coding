@@ -11,7 +11,7 @@
     <p><strong>Solved Problems: </strong> {{ solved_count }}</p>
   </div>
 
-  <div id="heatmap" class="heatmap" style="display:flex; justify-content:center; margin-bottom:40px;"></div>
+  <div id="heatmap" class="heatmap" style="display:flex; justify-content:center; padding:40px;"></div>
 
   <h3 style="padding-bottom: 7px;">Submissions</h3>
   <table class="submissions-table">
@@ -20,7 +20,8 @@
         <th>Problem</th>
         <th>Language</th>
         <th>Submitted At</th>
-        <th>Test Case Result</th>
+        <th>Status</th>
+        <th>Code</th>
       </tr>
     </thead>
     <tbody>
@@ -42,19 +43,35 @@
               <span class="status status--gray">Pending</span>
             {% endif %}
           </td>
+          <td>
+            <button class="view-code-btn" 
+                    data-code="{{ sub.code | e }}"
+                    data-lang="{{ sub.lang_name }}">
+              View Code
+            </button>
+          </td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
 
-<!-- Heatmap Script -->
+<!-- Modal -->
+<div id="codeModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3 id="modalLang"></h3>
+    <pre id="modalCode" class="code-block"></pre>
+  </div>
+</div>
+
+<!-- Heatmap Script (unchanged) -->
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script>
   const solvedDates = new Set({{ solved_dates|tojson }});
 
-  const rows = 7;      // days in a week
-  const cols = 54;     // fixed weeks
+  const rows = 7;
+  const cols = 54;
   const cellSize = 18;
   const cellPadding = 4;
 
@@ -70,7 +87,6 @@
   const startDate = new Date(today);
   startDate.setDate(today.getDate() - (rows*cols - 1));
 
-  // Generate 7x54 grid of dates
   const days = [];
   for (let i = 0; i < rows * cols; i++) {
     const d = new Date(startDate);
@@ -79,13 +95,9 @@
   }
 
   function formatDateLocal(d) {
-    const year = d.getFullYear();
-    const month = (d.getMonth()+1).toString().padStart(2,'0');
-    const day = d.getDate().toString().padStart(2,'0');
-    return `${year}-${month}-${day}`;
+    return d.toISOString().slice(0,10);
   }
 
-  // Draw cells
   svg.selectAll("rect")
     .data(days)
     .enter()
@@ -98,7 +110,6 @@
     .attr("rx", 4)
     .attr("ry", 4);
 
-  // Month labels
   const months = d3.timeMonths(days[0], today);
   svg.selectAll("text")
     .data(months)
@@ -114,7 +125,6 @@
     .style("fill", "#555")
     .style("font-weight", "600");
 
-  // Day labels (optional)
   const dayLabels = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
   svg.selectAll(".dayLabel")
     .data(dayLabels)
@@ -126,5 +136,27 @@
     .style("font-size", "10px")
     .style("fill", "#555");
 </script>
+
+<!-- Modal Script -->
+<script>
+  const modal = document.getElementById("codeModal");
+  const modalCode = document.getElementById("modalCode");
+  const modalLang = document.getElementById("modalLang");
+  const closeBtn = document.querySelector(".modal .close");
+
+  document.querySelectorAll(".view-code-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      modal.style.display = "block";
+      modalCode.textContent = btn.dataset.code;
+      modalLang.textContent = "Language: " + btn.dataset.lang;
+    });
+  });
+
+  closeBtn.onclick = () => modal.style.display = "none";
+  window.onclick = (event) => {
+    if (event.target == modal) modal.style.display = "none";
+  };
+</script>
+
 
 {% endblock %}
