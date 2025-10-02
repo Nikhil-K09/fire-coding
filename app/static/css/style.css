@@ -193,24 +193,35 @@ nav a:hover {
 /* ================== PROBLEM + EDITOR PAGE ================== */
 .problem-page {
   display: flex;
-  gap: 24px;
-  padding: 20px;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 60px); /* adjust if navbar present */
+  overflow: hidden;
 }
 
-/* Panels */
-.problem-panel,
+.problem-panel {
+  width: 40%;
+  min-width: 250px;
+  max-width: 800px;
+  padding: 15px;
+  overflow-y: auto;
+  background: #1e1e1e;
+  color: #fff;
+}
+
+.handle {
+  width: 8px;
+  cursor: ew-resize;
+  background: #444;
+}
+
 .editor-panel {
   flex: 1;
-  padding: 16px;
-  border-radius: 8px;
-  background: #1f2937;
-  color: #f9fafb;
-  overflow: auto;
-  resize: horizontal;
-  height: 800px;
-  min-width: 40%;
+  padding: 15px;
+  background: #121212;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
 }
+
 
 .problem-title {
   font-size: 28px;
@@ -293,14 +304,14 @@ nav a:hover {
 
 .run-btn {
   padding: 8px 14px;
-  background: #0078d7;
+  background: #FF4500;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
 }
 .run-btn:hover {
-  background: #005fa3;
+  background: #f77d50;
 }
 
 .ide-wrapper {
@@ -332,19 +343,26 @@ nav a:hover {
 }
 
 .editor-lang {
-  padding: 5px;
+  padding: 8px;
   background: #2d2d2d;
+  width: max-content;
   color: #f1f1f1;
   border: 1px solid #444;
   border-radius: 4px;
   padding-bottom: 8px;
+}
+.editor-top{
+  padding-bottom: 15px;
+}
+.codeplace{
+  min-height: 600px;
 }
 
 .CodeMirror {
   height: 800px;          /* editor height */
   font-size: 14px;
   border-radius: 6px;
-  padding: 20px;
+  padding: 10px;
   background: #1e1e1e;
   color: #f1f1f1;
 }
@@ -364,18 +382,7 @@ nav a:hover {
   margin: 10px 0;
 }
 
-#run {
-  padding: 8px 14px;
-  background: #007acc;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
 
-#run:hover {
-  background: #005a9e;
-}
 
 .test-result {
   background: #2d2d2d;

@@ -3,7 +3,7 @@
 <div class="problem-page">
 
   <!-- LEFT PANEL: problem description -->
-  <div class="problem-panel">
+  <div class="problem-panel" id="problem-panel">
     <h2 class="problem-title">{{ problem.title }}</h2>
     <p class="problem-difficulty">Difficulty: {{ problem.get('difficulty', '') }}</p>
 
@@ -28,17 +28,22 @@
     </section>
   </div>
 
+  <!-- DRAG HANDLE -->
+  <div class="handle" id="drag-handle"></div>
+
   <!-- RIGHT PANEL: code editor -->
-  <div class="editor-panel">
-    <label for="lang" class="editor-label">Language</label>
-    <select id="lang" class="editor-lang">
-      <option value="54" selected>C++ (g++)</option>
-      <option value="71">Python 3</option>
-      <option value="62">Java</option>
-      <option value="50">C</option>
-      <option value="51">C#</option>
-      <option value="46">Bash</option>
-    </select>
+  <div class="editor-panel" id="editor-panel">
+    <div class="editor-top" style="padding-bottom: 10px;">
+      <label for="lang" class="editor-label">Language</label>
+      <select id="lang" class="editor-lang">
+        <option value="62" selected>Java</option>
+        <option value="54">C++</option>
+        <option value="71">Python 3</option>
+        <option value="50">C</option>
+        <option value="51">C#</option>
+        <option value="46">Bash</option>
+      </select>
+    </div>
 
     <textarea id="editor"></textarea>
 
@@ -54,8 +59,6 @@
       <pre id="output" class="test-result">Click Run</pre>
       <pre id="error-box" class="error-box" style="display:none;"></pre>
     </div>
-
-
   </div>
 </div>
 
@@ -73,4 +76,5 @@ const STARTER_MAP = {{ problem.get("starter_code", {}) | tojson | safe }};
 const PROBLEM_ID = "{{ problem['_id'] }}";
 </script>
 <script src="/static/js/editor.js"></script>
+<script src="/static/js/split.js"></script>
 {% endblock %}
